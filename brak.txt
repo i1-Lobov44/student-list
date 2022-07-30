@@ -1,0 +1,118 @@
+    // Проверка на количество символов + у селектов проверка выбора
+    $result = mb_strlen($name) <= 20 ? true : false;
+    $result = mb_strlen($lastName) <= 25 ? true : false; 
+    $result = $gender != 'choose' ? true : false;
+    $result = mb_strlen($groupNum) < 50 ? true : false;
+    $result = mb_strlen($mail) < 50 ? true : false;
+    $result = mb_strlen($examPoints) > 0 && mb_strlen($examPoints) < 3 && $examPoints > 0 ? true : false;
+    $result = mb_strlen($dateOfBirth) == 10 ? true : false;
+    $result = $fromWhere != 'choose' ? true : false;
+
+function Validation($arr) {
+
+    foreach ($arr as $key => $value) {
+        
+        if($value) {
+            return false;
+        }
+
+        $arr[$key] = trim($arr[$key]);
+    }
+
+    // Создание переменных
+    $name = $arr['name'];
+    $lastName = $arr['lastName'];
+    $gender = $arr['gender'];
+    $groupNum = $arr['groupNum'];
+    $mail = $arr['mail'];
+    $examPoints = $arr['examPoints'];
+    $dateOfBirth = $arr['dateOfBirth'];
+    $fromWhere = $arr['fromWhere'];
+
+        private static $fields = ['name', 'lastName', 'gender',
+                              'groupNum', 'mail', 'examPoints',
+                              'dateOfBirth', 'fromWhere'];
+
+
+    // Проверка на количество символов + у селектов проверка выбора
+    return mb_strlen($name) <= 20 
+    && mb_strlen($lastName) <= 25 
+    && $gender != 'choose'
+    && mb_strlen($groupNum) < 50
+    && mb_strlen($mail) < 50
+    && mb_strlen($examPoints) > 0 
+    && mb_strlen($examPoints) < 3 
+    && $examPoints > 0
+    && mb_strlen($dateOfBirth) == 10
+    && $fromWhere != 'choose'
+    ? true : false;
+
+    // Регулярка для почты (нельзя ;,+()*&?!<>/|\^:%$#№""'{}~`а-ЯёЁ) 
+    // Регулярка на проверку недопустимых символов (цифры, знаки препинания и прочее) для имени, фамилии
+    // Регулярка для баллов (нельзя .;,+()*&?!<>/|\^:%$#№""'{} ёЁа-яА-Яa-zA-Z~`)
+    // Регулярка для номера группы (нельзя .;,+()*&?!<>/|\^:%$#№""'{} a-zA-Z~`)
+    // dateOfBirth год не должен быть меньше 1900 и больше (нынешний год - 16)
+    // gender fromWhere уже проверены на выбор
+
+
+}
+
+
+
+}
+
+function Validation($arr) {
+
+    foreach ($arr as $key => $value) {
+        
+        if(!$value) {
+            return false;
+        }
+
+        $arr[$key] = trim($arr[$key]);
+    }
+
+    // Создание переменных
+    $name = $arr['name'];
+    $lastName = $arr['lastName'];
+    $gender = $arr['gender'];
+    $groupNum = $arr['groupNum'];
+    $mail = $arr['mail'];
+    $examPoints = $arr['examPoints'];
+    $dateOfBirth = $arr['dateOfBirth'];
+    $fromWhere = $arr['fromWhere'];
+
+
+    // Проверка на количество символов + у селектов проверка выбора
+    $name = mb_strlen($name) <= 20 ? $name : false;
+    $lastName = mb_strlen($lastName) <= 25 ? $lastName : false; 
+    $gender = $gender != 'choose' ? $gender : false;
+    $groupNum = mb_strlen($groupNum) < 50 ? $groupNum : false;
+    $mail = mb_strlen($mail) < 50 ? $mail : false;
+    $examPoints = mb_strlen($examPoints) > 0 && mb_strlen($examPoints) < 3 && $examPoints > 0 ? $examPoints : false;
+    $dateOfBirth = mb_strlen($dateOfBirth) == 10 ? $dateOfBirth : false;
+    $fromWhere = $fromWhere != 'choose' ? $fromWhere : false;
+
+    $array = [
+        [$name, "дурачок имя нормально введи"],
+        [$lastName, "дурачок имя нормально введи"],
+        [$gender, "дурачок имя нормально введи"],
+        [$groupNum, "дурачок имя нормально введи"],
+        [$mail, "дурачок имя нормально введи"],
+        [$examPoints, "дурачок имя нормально введи"],
+        [$dateOfBirth, "дурачок имя нормально введи"],
+        [$fromWhere, "дурачок имя нормально введи"]    
+    ];
+
+
+
+    $counter = 0;
+    foreach ($array as $key => $value) {
+        if(!$array[$key][0]) {
+            $counter += 1;
+            echo $array[$key][1];
+        }
+        
+        return $counter > 0 ? false : true;
+    }
+    

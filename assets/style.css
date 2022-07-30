@@ -1,0 +1,8 @@
+.error {
+    color: red;
+}
+
+label, select, input {
+    display: block;
+    margin-bottom: 5px;
+}
