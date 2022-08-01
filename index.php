@@ -8,13 +8,18 @@ if (!empty($_POST)) {
     $validation = new FormValidator($_POST);
     $errors = $validation->validateForm();
 
+    // echo $_POST['dateOfBirth'];
 
     if (empty($errors)) {
 
-        // save to db
-        // successfully added
+        // фамилию имя сначала всё в нижний регистр, после первую букву в верхний
+        // номер группы в верхний регистр
+        //почту в нижний регистр
+
+        // сохранить всё в бд
+        // оповестить пользователя, что всё успешно добавлено
         // тут, наверное, нужно установить куки
-        // redirect to main page
+        // redirect to main pageы
     }
 }
 
