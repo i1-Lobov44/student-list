@@ -50,7 +50,7 @@ class FormValidator
         if (empty($val)) {
             $this->addError('name', 'Поле ввода имени обязательно');
         } else {
-            if (!preg_match('~^[а-яА-Я]{2,20}$~', $val)) {
+            if (!preg_match('~^[а-яА-ЯёЁ]{2,20}$~u', $val)) {
                 $this->addError('name', 'Имя должно состоять только из кириллицы
                                          и быть размером от 2 до 20 букв');
             }
@@ -64,7 +64,7 @@ class FormValidator
         if (empty($val)) {
             $this->addError('lastName', 'Поле ввода фамилии обязательно');
         } else {
-            if (!preg_match('~^[а-яА-Я]{2,25}$~', $val)) {
+            if (!preg_match('~^[а-яА-Я]{2,25}$~u', $val)) {
                 $this->addError('lastName', 'Фамилия должна состоять только из кириллицы
                                          и быть размером от 2 до 25 букв');
             }
@@ -89,7 +89,7 @@ class FormValidator
         if (empty($val)) {
             $this->addError('groupNum', 'Поле ввода номера группы обязательно');
         } else {
-            if (!preg_match('~^[А-ЯA-Z1234567890]{1,10}$~', $val)) {
+            if (!preg_match('~^[А-ЯA-Z1234567890]{1,10}$~u', $val)) {
                 $this->addError('groupNum', 'Номер группы должен состоять только из чисел и кириллицы/латиницы в верхнем регистре и быть продолжительностью от 1 до 10 символов');
             }
         }

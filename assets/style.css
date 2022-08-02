@@ -1,5 +1,13 @@
+body {
+    background-color: rgb(203, 199, 199);
+}
+
 .error {
     color: red;
+}
+
+.success {
+    color: rgb(37, 189, 37);
 }
 
 label, select, input {
