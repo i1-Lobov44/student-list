@@ -1,0 +1,52 @@
+            $pdo = new PDO("mysql:host=localhost;dbname=students", "root", "44");
+
+
+            $name = mb_strtoupper(mb_substr($_POST['name'], 0, 1)) . mb_strtolower(mb_substr($_POST['name'], 1));
+
+            $lastName = mb_strtoupper(mb_substr($_POST['lastName'], 0, 1)) . mb_strtolower(mb_substr($_POST['lastName'], 1));
+
+            // верхний регистр
+            $groupNum = trim(mb_strtoupper($_POST['groupNum']));
+
+            // нижний регистр
+            $email = trim(mb_strtolower($_POST['mail']));
+
+            $examPoints = trim($_POST['examPoints']);
+
+            // Проверяется, существует ли уже такой студент в базе данных
+            $sql = 'SELECT * from student WHERE name ="' . $name . '" AND last_name = "' . $lastName . '" AND gender = "' . $_POST['gender'] . '" AND group_num = "' . $groupNum . '" AND email = "' . $email . '" AND exam_points = "' . $examPoints . '" AND date_of_birth = "' . $_POST['dateOfBirth'] . '" AND residence_status = "' . $_POST['fromWhere'] . '" OR email = "' . $email . '"';
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+            // если не существует, добавляем
+            if (empty($result)) {
+
+                $sql = 'INSERT INTO student (name, last_name, gender, group_num, email, exam_points, date_of_birth, residence_status) VALUES (:name, :lastName, :gender, :groupNum, :mail, :examPoints, :dateOfBirth, :fromWhere)';
+
+                $conn = $pdo->prepare($sql);
+
+                $conn->bindParam(':name', $name);
+                $conn->bindParam(':lastName', $lastName);
+                $conn->bindParam(':gender', $_POST['gender']);
+                $conn->bindParam(':groupNum', $groupNum);
+                $conn->bindParam(':mail', $email);
+                $conn->bindParam(':examPoints', $examPoints);
+                $conn->bindParam(':dateOfBirth', $_POST['dateOfBirth']);
+                $conn->bindParam(':fromWhere', $_POST['fromWhere']);
+
+                $result = $conn->execute();
+
+
+
+
+
+                                    <td>
+                        <a href="form.php?id=<?= $row[0] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form method="post" action="delete.php" style="display: inline-block">
+                            <input type="hidden" name="id" value="<?= $row[0] ?>" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>ы

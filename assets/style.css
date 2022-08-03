@@ -14,3 +14,14 @@ label, select, input {
     display: block;
     margin-bottom: 5px;
 }
+
+
+table, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+a {
+    margin: 10px;
+}

@@ -1,5 +1,8 @@
 <?php
 require_once('FormValidator.php');
+require_once('DataBase.php');
+require_once('func.php');
+$db = new DataBase('root', '44');
 
 if (!empty($_POST)) {
 
@@ -9,87 +12,26 @@ if (!empty($_POST)) {
 
     if (empty($errors)) {
 
-        // фамилию имя сначала всё в нижний регистр, после первую букву в верхний
-        // номер группы в верхний регистр
-        //почту в нижний регистр
-
-        //DONE - сохранить всё в бд
-        //DONE - оповестить пользователя, что всё успешно добавлено
-        //DONE - тут, наверное, нужно установить куки
-        // redirect to main pageы
-
-
+        if (!empty($_COOKIE['password'])) {
+            $db->DeleteInfo($_COOKIE['password']);
+        }
         //Сохранение в бд
-        try {
-            $pdo = new PDO("mysql:host=localhost;dbname=students", "root", "44");
+        if ($db->InsertIntoDB($_POST)) {
 
+            $value = $_POST['name'] . ' ' . $_POST['lastName'];
+            $email = $_POST['mail'];
+            $time = strtotime('+10years');
+            setcookie('student', $value, $time, "/");
+            setcookie('email', $email, $time, "/");
+            header("Location: index.php");
 
-            $name = mb_strtoupper(mb_substr($_POST['name'], 0, 1)) . mb_strtolower(mb_substr($_POST['name'], 1));
-
-            $lastName = mb_strtoupper(mb_substr($_POST['lastName'], 0, 1)) . mb_strtolower(mb_substr($_POST['lastName'], 1));
-
-            // верхний регистр
-            $groupNum = trim(mb_strtoupper($_POST['groupNum']));
-
-            // нижний регистр
-            $email = trim(mb_strtolower($_POST['mail']));
-
-            $examPoints = trim($_POST['examPoints']);
-
-            // Проверяется, существует ли уже такой студент в базе данных
-            $sql = 'SELECT * from student WHERE name ="' . $name . '" AND last_name = "' . $lastName . '" AND gender = "' . $_POST['gender'] . '" AND group_num = "' . $groupNum . '" AND email = "' . $email . '" AND exam_points = "' . $examPoints . '" AND date_of_birth = "' . $_POST['dateOfBirth'] . '" AND residence_status = "' . $_POST['fromWhere'] . '" OR email = "' . $email . '"';
-
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
-
-            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-            // если не существует, добавляем
-            if (empty($result)) {
-
-                $sql = 'INSERT INTO student (name, last_name, gender, group_num, email, exam_points, date_of_birth, residence_status) VALUES (:name, :lastName, :gender, :groupNum, :mail, :examPoints, :dateOfBirth, :fromWhere)';
-
-                $conn = $pdo->prepare($sql);
-
-                $conn->bindParam(':name', $name);
-                $conn->bindParam(':lastName', $lastName);
-                $conn->bindParam(':gender', $_POST['gender']);
-                $conn->bindParam(':groupNum', $groupNum);
-                $conn->bindParam(':mail', $email);
-                $conn->bindParam(':examPoints', $examPoints);
-                $conn->bindParam(':dateOfBirth', $_POST['dateOfBirth']);
-                $conn->bindParam(':fromWhere', $_POST['fromWhere']);
-
-                $result = $conn->execute();
-
-                //cookie
-                $value = $_POST['name'] . ' ' . $_POST['lastName'];
-
-                $time = strtotime('+10years');
-
-                setcookie('student', $value, $time);
+            exit;
+        } else {
 ?>
-
-                <div class="success">
-                    Студент успешно добавлен в базу данных!
-                </div>
-
-            <?php
-
-
-                //redirect to main page
-
-            } else {
-            ?>
-
-                <div class="error">
-                    Такие пользователь или почта уже зарегистрированы
-                </div>
-
+            <div class="error">
+                Студент с такими данными уже зарегистрирован
+            </div>
 <?php
-            }
-        } catch (PDOException $e) {
-            echo $e->getMessage();
         }
     }
 }
@@ -104,6 +46,9 @@ if (!empty($_POST)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css">
+
+    <link href="app.css" rel="stylesheet" />
+
     <title>Document</title>
 </head>
 
@@ -113,62 +58,71 @@ if (!empty($_POST)) {
 
         <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
 
+            <?php
+
+            $arr = $db->EditInformation($_COOKIE['password']);
+
+            $arr = !empty($_COOKIE) ? $db->EditInformation($_COOKIE['password']) : null;
+
+            ?>
+
             <label for="name">Имя</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'])  ?? '' ?>">
+            <input type="text" name="name" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[1] : $_POST['name']) ?? '' ?>">
             <div class="error">
                 <?= $errors['name'] ?? '' ?>
             </div>
 
             <label for="lastName">Фамилия</label>
-            <input type="text" name="lastName" value="<?= htmlspecialchars($_POST['lastName'])  ?? '' ?>">
+            <input type="text" name="lastName" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[2] : $_POST['lastName'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['lastName'] ?? '' ?>
             </div>
 
             <select name="gender">
                 <option value="choose">Пол</option>
-                <option <?= $_POST['gender'] == 'male' ? 'selected="true"' : '' ?> value="male">Мужской</option>
-                <option <?= $_POST['gender'] == 'female' ? 'selected="true"' : '' ?> value="female">Женский</option>
-                <option <?= $_POST['gender'] == 'other' ? 'selected="true"' : '' ?> value="other">Другое</option>
+                <option <?= $_POST['gender'] == 'male' || $arr[3] == 'male' ? 'selected="true"' : '' ?> value="male">Мужской</option>
+                <option <?= $_POST['gender'] == 'female' || $arr[3] == 'female' ? 'selected="true"' : '' ?> value="female">Женский</option>
+                <option <?= $_POST['gender'] == 'other' || $arr[3] == 'other' ? 'selected="true"' : '' ?> value="other">Другое</option>
             </select>
             <div class="error">
                 <?= $errors['gender'] ?? '' ?>
             </div>
 
             <label for="groupNum">Номер группы</label>
-            <input type="text" name="groupNum" value="<?= htmlspecialchars($_POST['groupNum'])  ?? '' ?>">
+            <input type="text" name="groupNum" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[4] : $_POST['groupNum'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['groupNum'] ?? '' ?>
             </div>
 
             <label for="mail">email</label>
-            <input type="text" name="mail" value="<?= htmlspecialchars($_POST['mail'])  ?? '' ?>">
+            <input type="text" name="mail" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[5] : $_POST['mail'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['mail'] ?? '' ?>
             </div>
 
             <label for="examPoints">Суммарное число баллов на ЕГЭ</label>
-            <input type="text" name="examPoints" value="<?= htmlspecialchars($_POST['examPoints'])  ?? '' ?>">
+            <input type="text" name="examPoints" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[6] : $_POST['examPoints'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['examPoints'] ?? '' ?>
             </div>
 
             <label for="dateOfBirth">Год рождения</label>
-            <input type="date" name="dateOfBirth" value="<?= htmlspecialchars($_POST['dateOfBirth'])  ?? '' ?>">
+            <input type="date" name="dateOfBirth" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[7] : $_POST['dateOfBirth'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['dateOfBirth'] ?? '' ?>
             </div>
 
             <select name="fromWhere" id="fromWhere">
                 <option value="choose">Статус проживания</option>
-                <option <?= $_POST['fromWhere'] == 'visitor' ? 'selected="true"' : '' ?> value="visitor">Приезжий</option>
-                <option <?= $_POST['fromWhere'] == 'local' ? 'selected="true"' : '' ?> value="local">Местный</option>
+                <option <?= $_POST['fromWhere'] == 'visitor' || $arr[8] == 'visitor' ? 'selected="true"' : '' ?> value="visitor">Приезжий</option>
+                <option <?= $_POST['fromWhere'] == 'local' || $arr[8] == 'local' ? 'selected="true"' : '' ?> value="local">Местный</option>
             </select>
             <div class="error">
                 <?= $errors['fromWhere'] ?? '' ?>
             </div>
 
             <button type="submit">Отправить</button>
+            <a href="index.php">Отмена</a>
         </form>
 
     </div>
