@@ -2,11 +2,11 @@
 
 // TODO:
 
-// Пагинация (50 человек на страницу)
-// сортировка по любому полю кликом на заголовок колонки таблицы
-    // по умолчанию по числу баллов вниз
+//DONE!!! Пагинация (50 человек на страницу)
+//DONE сортировка по любому полю кликом на заголовок колонки таблицы
+//DONE по умолчанию по числу баллов вниз
 // поле поиска, которое ищет сразу по всем строкам таблицы, регистронезависимо
-    // подсвечивать в таблице найденную часть слова
+// подсвечивать в таблице найденную часть слова
 
 require_once('DataBase.php');
 
@@ -44,22 +44,38 @@ if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php') {
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Номер группы</th>
-                <th>Число баллов</th>
+                <th><a href="index.php?sort=name">Имя </a> <a href="index.php?sort=name&order=Desc">&darr;</a> <a href="index.php?sort=name&order=Asc">&uarr;</a> </th>
+                <th><a href="index.php?sort=last_name">Фамилия</a> <a href="index.php?sort=last_name&order=Desc">&darr;</a> <a href="index.php?sort=last_name&order=Asc">&uarr;</a> </th>
+                <th><a href="index.php?sort=group_num">Номер группы</a> <a href="index.php?sort=group_num&order=Desc">&darr;</a> <a href="index.php?sort=group_num&order=Asc">&uarr;</a> </th>
+                <th><a href="index.php?sort=exam_points">Число баллов</a> <a href="index.php?sort=exam_points&order=Desc">&darr;</a> <a href="index.php?sort=exam_points&order=Asc">&uarr;</a> </th>
             </tr>
         </thead>
 
         <?php
+        $db = new DataBase('root', '44');
 
-        $db = new DataBase('root', '44', $_POST);
-
-        $db->DataOutput();
-
+        if (empty($_GET['sort'])) {
+            //$db->DataOutput();
+            $res = $db->Pagination();
+        } else {
+            if (!empty($_GET['order'])) {
+                $res = $db->Pagination($_GET['sort'], $_GET['order']);
+            } else {
+                $res = $db->Pagination($_GET['sort']);
+            }
+        }
         ?>
 
     </table>
+
+    <?php
+
+    if (!empty($res)) {
+
+        echo '<div id="paging"><p>', $res[0], ' Страница ', $res[1], ' из ', $res[2], ' страниц, отображаются ', $res[3], '-', $res[4], ' из ', $res[5], ' студентов ', $res[6], ' </p></div>';
+    }
+
+    ?>
 
 </body>
 
