@@ -10,7 +10,7 @@
 
 require_once('DataBase.php');
 
-if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php') {
+if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php' && !empty($_COOKIE['student'])) {
 ?>
     <div class="success">
         Данные успешно сохранены!
@@ -33,24 +33,10 @@ if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php') {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="app.css" rel="stylesheet" />
 
-
-
     <title>Document</title>
 </head>
 
 <body>
-
-    <!-- Сделать две кнопки одна добавить другая редактировать -->
-    <!-- <a href="form.php" class="btn btn-sm btn-outline-primary"><button type="button" btn btn-primary>Добавить свои данные</button></a> -->
-    <!-- <a href="form.php?id=edit" class="btn btn-sm btn-outline-primary">Редактировать свои данные</a> -->
-
-    <!-- <a href="form.php"><button type="button" class="btn btn-sm btn-outline-primary" <?php if (!empty($_COOKIE['student'])) { ?> disabled <?php }  ?>>Добавить свои данные</button></a> -->
-    <a href="form.php"><button type="button" class="btn btn-sm btn-outline-primary" <?= !empty($_COOKIE['student']) ? "disabled" : "" ?>>Добавить свои данные</button></a>
-
-    <a href="form.php?id=edit"><button type="button" class="btn btn-sm btn-outline-primary" <?= empty($_COOKIE['student']) ? "disabled" : ""  ?>>Редактировать свои данные</button></a>
-
-
-
     <table class="table table-striped">
         <thead class="thead-dark">
             <tr>
@@ -77,6 +63,10 @@ if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php') {
         </tbody>
 
     </table>
+
+    <a href="form.php"><button type="button" class="btn btn-sm btn-outline-primary" <?= !empty($_COOKIE['student']) ? "disabled" : "" ?>>Добавить свои данные</button></a>
+    <a href="form.php?id=edit"><button type="button" class="btn btn-sm btn-outline-primary" <?= empty($_COOKIE['student']) ? "disabled" : ""  ?>>Редактировать свои данные</button></a>
+
 
     <?php
 
