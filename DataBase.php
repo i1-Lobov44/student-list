@@ -195,9 +195,7 @@ class DataBase
 <?php
 
                 }
-                // Вывод информации о странице
-                // echo '<div id="paging"><p>', $prevlink, ' Страница ', $page, ' из ', $pages, ' страниц, отображаются ', $start, '-', $end, ' из ', $total, ' студентов ', $nextlink, ' </p></div>';
-
+                
                 $arr = [$prevlink, $page, $pages, $start, $end, $total, $nextlink];
 
                 return $arr;

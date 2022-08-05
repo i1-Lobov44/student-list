@@ -47,7 +47,75 @@ if (!empty($_POST)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css">
 
-    <link href="app.css" rel="stylesheet" />
+    <!-- <link href="app.css" rel="stylesheet" /> -->
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            $("#datepicker").datepicker({
+                changeYear: true,
+                changeMonth: true,
+                // dateFormat: "dd-mm-yy"
+
+                maxDate: "-16Y",
+                minDate: "-100Y",
+                yearRange: "-100:-16"
+            });
+
+            $.datepicker.setDefaults($.datepicker.regional["ru"]);
+            var dateFormat = $(".selector").datepicker("option", "dateFormat");
+
+        });
+    </script>
+
+    <script>
+        /* Russian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+        /* Written by Andrew Stromnov (stromnov@gmail.com). */
+        (function(factory) {
+            "use strict";
+
+            if (typeof define === "function" && define.amd) {
+
+                // AMD. Register as an anonymous module.
+                define(["../widgets/datepicker"], factory);
+            } else {
+
+                // Browser globals
+                factory(jQuery.datepicker);
+            }
+        })(function(datepicker) {
+            "use strict";
+
+            datepicker.regional.ru = {
+                closeText: "Закрыть",
+                prevText: "Пред",
+                nextText: "След",
+                currentText: "Сегодня",
+                monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+                ],
+                monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн",
+                    "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
+                ],
+                dayNames: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
+                dayNamesShort: ["вск", "пнд", "втр", "срд", "чтв", "птн", "сбт"],
+                dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                weekHeader: "Нед",
+                dateFormat: "dd-mm-yy",
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ""
+            };
+            datepicker.setDefaults(datepicker.regional.ru);
+
+            return datepicker.regional.ru;
+
+        });
+    </script>
 
     <title>Document</title>
 </head>
@@ -107,10 +175,21 @@ if (!empty($_POST)) {
             </div>
 
             <label for="dateOfBirth">Год рождения</label>
-            <input type="date" name="dateOfBirth" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[7] : $_POST['dateOfBirth'])  ?? '' ?>">
+
+            <input type="text" id="datepicker" name="dateOfBirth" placeholder="дд-мм-гг" value="<?= htmlspecialchars($_GET['id'] == 'edit' ? $arr[7] : $_POST['dateOfBirth'])  ?? '' ?>">
             <div class="error">
                 <?= $errors['dateOfBirth'] ?? '' ?>
             </div>
+
+            <!-- Script -->
+            <script type='text/javascript'>
+                $(function() {
+
+                    // Initialize and change language to hindi
+                    $('#datepicker').datepicker($.datepicker.regional["hi"]);
+
+                });
+            </script>
 
             <select name="fromWhere" id="fromWhere">
                 <option value="choose">Статус проживания</option>
