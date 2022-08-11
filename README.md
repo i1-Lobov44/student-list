@@ -1,5 +1,7 @@
 # Список студентов
 
+Описание задачи : https://github.com/codedokode/pasta/blob/master/student-list.md
+
 * Что уже сделано: 
 
     + HTML-форма для регистрации пользователя

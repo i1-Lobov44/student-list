@@ -2,7 +2,7 @@
 require_once('FormValidator.php');
 require_once('DataBase.php');
 require_once('func.php');
-$db = new DataBase('root', '44');
+$db = new DataBase('students', 'root', '44');
 
 if (!empty($_POST)) {
 

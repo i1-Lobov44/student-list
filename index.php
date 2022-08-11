@@ -48,7 +48,7 @@ if ($_SERVER['HTTP_REFERER'] == 'http://localhost/students/form.php' && !empty($
         </thead>
         <tbody>
             <?php
-            $db = new DataBase('root', '44');
+            $db = new DataBase('students', 'root', '44');
 
             if (empty($_GET['sort'])) {
                 $res = $db->Pagination();

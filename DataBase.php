@@ -8,12 +8,14 @@ class DataBase
     private $password;
     private $pdo;
     private $data;
+    private $dbname;
 
-    public function __construct($user, $password)
+    public function __construct($dbname, $user, $password)
     {
         $this->user = $user;
         $this->password = $password;
-        $this->pdo = new PDO("mysql:host=localhost;dbname=students", $this->user, $this->password);
+        $this->dbname = $dbname;
+        $this->pdo = new PDO("mysql:host=localhost;dbname=" . $this->dbname, $this->user, $this->password);
     }
 
     public function InsertIntoDB($postData)
@@ -195,7 +197,7 @@ class DataBase
 <?php
 
                 }
-                
+
                 $arr = [$prevlink, $page, $pages, $start, $end, $total, $nextlink];
 
                 return $arr;
