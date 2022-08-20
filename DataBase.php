@@ -1,4 +1,5 @@
 <?php
+$test = 't';
 require_once('func.php');
 
 class DataBase
